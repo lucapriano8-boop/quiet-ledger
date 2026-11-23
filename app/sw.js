@@ -1,5 +1,5 @@
 // Service worker: rende l'app disponibile offline. Non tocca mai le richieste verso Google.
-const VERSIONE = "1.0.0";
+const VERSIONE = "1.0.2";
 const CACHE = "quiet-ledger-" + VERSIONE;
 const FILE = ["./", "index.html", "stile.css", "manifest.webmanifest", "js/app.js", "js/archivio.js", "js/analisi.js",
   "js/cripto.js", "js/drive.js", "js/sync.js", "js/config.js", "js/vendor/jsQR.js",

@@ -38,9 +38,15 @@ async function avvio() {
   schermataIniziale();
 }
 
+// Messaggio d'errore con il codice tecnico tra parentesi: serve a capire cosa è successo se qualcosa non va.
+function testoErrore(e, annullato) {
+  if (e?.name === "NotAllowedError") return `${annullato} Se non hai annullato tu, riprova. (NotAllowedError)`;
+  return `${e?.message || "Errore imprevisto."}${e?.name && e.name !== "Error" ? ` (${e.name})` : ""}`;
+}
+
 async function schermataIniziale() {
   schede.hidden = true; document.body.classList.add("senza-schede");
-  if (!(await A.esisteArchivio())) return disegnaBenvenuto();
+  if (!(await A.esisteArchivio())) return (await A.passkeyInAttesa()) ? disegnaConfermaPasskey() : disegnaBenvenuto();
   const metodo = await A.metodoSblocco();
   app.innerHTML = h`<section class="centro">
     <img class="logo" src="icone/icona-192.png" alt="">
@@ -65,6 +71,16 @@ function disegnaBenvenuto(conPassword = false) {
         <p class="nota">Senza questa password i dati sul telefono non si recuperano, ma restano al sicuro sul PC.</p></form>`
       : h`<button class="primario" data-azione="crea-passkey">Proteggi con Face ID</button>
           <button class="link" data-azione="usa-password">Usa una password invece</button>`}
+  </section>`;
+}
+
+function disegnaConfermaPasskey() {
+  app.innerHTML = h`<section class="centro">
+    <img class="logo" src="icone/icona-192.png" alt="">
+    <div><h1>Ultimo passaggio</h1><p class="sotto">La passkey è stata creata. Tocca ancora una volta per attivare lo sblocco con Face ID.</p></div>
+    ${s.errore ? h`<p class="errore">${s.errore}</p>` : ""}
+    <button class="primario" data-azione="completa-passkey">Conferma con Face ID</button>
+    <button class="link" data-azione="annulla-passkey">Ricomincia</button>
   </section>`;
 }
 
@@ -411,9 +427,20 @@ function dialogoConferma(testo, azione) {
 
 // ------------------------------------------------------------ azioni
 const azioni = {
-  "crea-passkey": async () => { try { await dopoSblocco(await A.creaConPasskey()); } catch (e) { s.errore = e.name === "NotAllowedError" ? "Operazione annullata." : e.message; disegnaBenvenuto(); } },
+  "crea-passkey": async () => {
+    try {
+      const dk = await A.creaConPasskey();
+      s.errore = "";
+      if (dk) await dopoSblocco(dk); else disegnaConfermaPasskey();
+    } catch (e) { s.errore = testoErrore(e, "Operazione annullata."); disegnaBenvenuto(); }
+  },
+  "completa-passkey": async () => {
+    try { await dopoSblocco(await A.completaPasskey()); }
+    catch (e) { s.errore = testoErrore(e, "Face ID annullato."); disegnaConfermaPasskey(); }
+  },
+  "annulla-passkey": async () => { await A.annullaPasskey(); s.errore = ""; disegnaBenvenuto(); },
   "usa-password": () => disegnaBenvenuto(true),
-  sblocca: async () => { try { await dopoSblocco(await A.sblocca()); } catch (e) { s.errore = e.name === "NotAllowedError" ? "Sblocco annullato." : e.message; schermataIniziale(); } },
+  sblocca: async () => { try { await dopoSblocco(await A.sblocca()); } catch (e) { s.errore = testoErrore(e, "Sblocco annullato."); schermataIniziale(); } },
   "accedi-google": async () => { if (s.dk) await salva(); D.accedi(); },
   "apri-fotocamera": () => { s.collega.fotocamera = true; disegnaCollega(); },
   "chiudi-fotocamera": () => { fermaFotocamera(); disegnaCollega(); },
@@ -501,4 +528,10 @@ document.addEventListener("input", (e) => {  // categoria suggerita dalla descri
   if ([...sel.options].some((o) => o.value === scelta)) sel.value = scelta;
 });
 
-avvio();
+// Protezione dal "clickjacking": GitHub Pages non permette di vietarlo con un'intestazione HTTP (frame-ancestors),
+// quindi se la pagina viene caricata dentro un'altra pagina l'app non parte.
+if (window.top !== window.self) {
+  app.textContent = "Quiet Ledger si apre solo come pagina a sé, non dentro un altro sito.";
+} else {
+  avvio();
+}

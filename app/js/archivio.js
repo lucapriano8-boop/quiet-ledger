@@ -51,7 +51,21 @@ async function leggiPrf(credId, sale) {
 
 export const esisteArchivio = async () => !!(await leggi("cassaforte"));
 
-/** Crea la protezione con Face ID. Restituisce la chiave dei dati (in memoria). */
+// Su iPhone Face ID si può chiedere solo come risposta diretta a un tocco. iOS 18 crea la passkey ma dà il
+// segreto PRF solo all'accesso: in quel caso la creazione si completa con un secondo tocco ("Conferma con Face ID").
+const IN_ATTESA = "passkey-in-attesa";
+export const passkeyInAttesa = async () => !!(await leggi(IN_ATTESA));
+export const annullaPasskey = () => kv("readwrite", (s) => s.delete(IN_ATTESA));
+
+async function salvaPasskey(credId, sale, prf) {
+  const dk = c.casuali(32);
+  const kek = await kekDaPrf(prf);
+  await scrivi("cassaforte", { v: 1, metodo: "passkey", credId: c.b64(credId), sale: c.b64(sale),
+                               dk: c.b64(await c.cifra(kek, dk, c.utf8("dk"))) });
+  return dk;
+}
+
+/** Crea la protezione con Face ID. Restituisce la chiave dei dati, oppure null se serve il secondo tocco. */
 export async function creaConPasskey() {
   const sale = c.casuali(32);
   const cred = await navigator.credentials.create({ publicKey: {
@@ -64,11 +78,19 @@ export async function creaConPasskey() {
   const est = cred.getClientExtensionResults()?.prf;
   if (est && est.enabled === false) throw new Error("Face ID non utilizzabile qui: serve iOS 18 o successivo. Usa una password.");
   const credId = new Uint8Array(cred.rawId);
-  const prf = est?.results?.first || await leggiPrf(credId, sale);  // alcuni sistemi danno il PRF solo all'accesso
-  const dk = c.casuali(32);
-  const kek = await kekDaPrf(prf);
-  await scrivi("cassaforte", { v: 1, metodo: "passkey", credId: c.b64(credId), sale: c.b64(sale),
-                               dk: c.b64(await c.cifra(kek, dk, c.utf8("dk"))) });
+  const prf = est?.results?.first;
+  if (prf) return salvaPasskey(credId, sale, prf);
+  await scrivi(IN_ATTESA, { credId: c.b64(credId), sale: c.b64(sale) });
+  return null;
+}
+
+/** Secondo tocco: legge il segreto PRF con Face ID e completa la protezione. */
+export async function completaPasskey() {
+  const p = await leggi(IN_ATTESA);
+  if (!p) throw new Error("La configurazione di Face ID non è più in corso: ricomincia.");
+  const credId = c.unb64(p.credId), sale = c.unb64(p.sale);
+  const dk = await salvaPasskey(credId, sale, await leggiPrf(credId, sale));
+  await annullaPasskey();
   return dk;
 }
 
