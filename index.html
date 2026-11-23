@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiet Ledger</title>
+<meta name="description" content="Quiet Ledger: le tue spese personali, cifrate e sul tuo dispositivo.">
+<link rel="icon" href="icona.png">
+<style>
+  :root { --bg:#f3f6f5; --carta:#ffffff; --testo:#0f1d1c; --testo2:#47605d; --linea:#dce5e3; --accento:#0d6b63; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1413; --carta:#161d1c; --testo:#e8efee; --testo2:#a7b8b5; --linea:#26312f; --accento:#4cbcae; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--testo); font: 16px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif;
+         padding: 48px max(20px, env(safe-area-inset-left)); }
+  main { max-width: 680px; margin: 0 auto; display: grid; gap: 28px; }
+  header { display:flex; align-items:center; gap:16px; }
+  header img { width:64px; height:64px; }
+  h1 { font-size: 2rem; margin:0; }
+  .sotto { color:var(--testo2); margin:0; }
+  section { background:var(--carta); border:1px solid var(--linea); border-radius:14px; padding:22px 24px; }
+  h2 { font-size:1.1rem; margin:0 0 8px; }
+  ul { margin:0; padding-left:1.2em; }
+  li + li { margin-top:6px; }
+  a { color:var(--accento); }
+  footer { color:var(--testo2); font-size:.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icona.png" alt="">
+    <div>
+      <h1>Quiet Ledger</h1>
+      <p class="sotto">Le tue spese personali, cifrate e sul tuo dispositivo.</p>
+    </div>
+  </header>
+  <section>
+    <h2>Cos'è</h2>
+    <p>Quiet Ledger è un'app personale per tenere traccia delle spese: importa lo storico da Excel, divide le spese per categoria, trova gli abbonamenti, prevede le spese del mese successivo e segue gli obiettivi di risparmio. Funziona su PC Windows e, come web app, su iPhone.</p>
+  </section>
+  <section>
+    <h2>Privacy prima di tutto</h2>
+    <ul>
+      <li>I dati restano sul tuo dispositivo, in un archivio cifrato con AES-256 e protetto da PIN.</li>
+      <li>Nessun server dell'app, nessun account, nessuna pubblicità, nessun tracciamento.</li>
+      <li>La sincronizzazione tra PC e telefono, se la attivi, usa una cartella nascosta del <em>tuo</em> Google Drive e vi scrive solo file già cifrati, che Google non può leggere.</li>
+    </ul>
+  </section>
+  <footer>
+    <a href="privacy.html">Informativa sulla privacy</a> · Progetto personale, non commerciale.
+  </footer>
+</main>
+</body>
+</html>

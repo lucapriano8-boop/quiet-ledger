@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiet Ledger · Privacy</title>
+<link rel="icon" href="icona.png">
+<style>
+  :root { --bg:#f3f6f5; --carta:#ffffff; --testo:#0f1d1c; --testo2:#47605d; --linea:#dce5e3; --accento:#0d6b63; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1413; --carta:#161d1c; --testo:#e8efee; --testo2:#a7b8b5; --linea:#26312f; --accento:#4cbcae; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--testo); font: 16px/1.65 "Segoe UI", system-ui, -apple-system, sans-serif;
+         padding: 48px max(20px, env(safe-area-inset-left)); }
+  main { max-width: 680px; margin: 0 auto; background:var(--carta); border:1px solid var(--linea); border-radius:14px; padding: 28px 30px; }
+  h1 { font-size: 1.7rem; margin:0 0 4px; }
+  h2 { font-size: 1.1rem; margin: 26px 0 6px; }
+  .data { color:var(--testo2); margin:0; }
+  a { color:var(--accento); }
+  ul { padding-left: 1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Informativa sulla privacy</h1>
+  <p class="data">Quiet Ledger · aggiornata il 23 novembre 2026</p>
+
+  <h2>In breve</h2>
+  <p>Quiet Ledger non raccoglie, non riceve e non vende alcun dato. Non esiste un server dell'app: tutto ciò che inserisci resta sui tuoi dispositivi e, se attivi la sincronizzazione, nel tuo Google Drive, solo in forma cifrata.</p>
+
+  <h2>Quali dati tratta l'app</h2>
+  <p>Le spese, le entrate, gli abbonamenti, i saldi e gli obiettivi di risparmio che inserisci o importi. Questi dati sono salvati sul tuo dispositivo in un archivio cifrato (AES-256-GCM), apribile solo con il tuo PIN o il tuo codice di recupero.</p>
+
+  <h2>Google Drive</h2>
+  <p>Se attivi la sincronizzazione tra PC e telefono, l'app chiede l'accesso al tuo Google Drive con il solo permesso <code>drive.appdata</code>: una cartella nascosta riservata all'app. L'app non può vedere, leggere o modificare gli altri file del tuo Drive.</p>
+  <ul>
+    <li>In quella cartella vengono scritti solo file cifrati sul tuo dispositivo, prima dell'invio. Né Google né l'autore dell'app possono leggerne il contenuto.</li>
+    <li>Il token di accesso a Google è conservato dentro l'archivio cifrato del dispositivo.</li>
+    <li>L'uso delle informazioni ricevute dalle API di Google rispetta le <a href="https://developers.google.com/terms/api-services-user-data-policy">norme sui dati utente dei servizi API di Google</a>, inclusi i requisiti di utilizzo limitato.</li>
+  </ul>
+
+  <h2>Condivisione con terzi</h2>
+  <p>Nessuna. L'app non contiene pubblicità, strumenti di analisi o di tracciamento, e non trasmette dati all'autore né a terzi.</p>
+
+  <h2>Conservazione e cancellazione</h2>
+  <p>I dati restano finché non li elimini. Puoi cancellare tutte le spese dalle Impostazioni dell'app. Disattivando la sincronizzazione puoi eliminare anche i file cifrati da Google Drive e revocare l'accesso. In alternativa puoi revocarlo da <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+
+  <h2>Contatti</h2>
+  <p>Per domande su questa informativa: <a href="mailto:INSERISCI-QUI-LA-TUA-EMAIL">INSERISCI-QUI-LA-TUA-EMAIL</a></p>
+
+  <p><a href="./">← Torna a Quiet Ledger</a></p>
+</main>
+</body>
+</html>
