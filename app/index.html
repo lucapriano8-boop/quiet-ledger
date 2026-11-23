@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Solo codice di questo sito; rete solo verso le API di Google Drive. Nessuno script esterno. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src https://www.googleapis.com; media-src 'self' blob: mediastream:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Quiet Ledger</title>
+<meta name="description" content="Le tue spese, cifrate sul tuo iPhone.">
+<meta name="theme-color" content="#0f1413" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f6f5" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quiet Ledger">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icone/apple-touch-icon.png">
+<link rel="icon" href="icone/icona-192.png">
+<link rel="stylesheet" href="stile.css">
+<script src="js/vendor/jsQR.js" defer></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body class="senza-schede">
+<main id="app" aria-live="polite"></main>
+<nav class="schede" id="schede" hidden></nav>
+<dialog id="dialogo"></dialog>
+</body>
+</html>
